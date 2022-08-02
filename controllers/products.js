@@ -17,21 +17,25 @@ export const getSingleProduct = (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-    console.log(req.user)
-  const userId = req.user._id;
-  const user = await Users.findOne({ _id: userId });
+  const userId  = req.params.userID
+//   console.log(req.params.userID)
+//   const userId = "62e93593bfdf8ddd1d95407c";
+  const user = await Users.findById(userId);
   const { name, quantity, price, status, category } = req.body;
   const product = await Products.create({
-    name,
-    quantity,
-    price,
-    status,
-    category,
-  });
-  user.products.push(product);
+      name,
+      quantity,
+      price,
+      status,
+      category,
+    });
+    const addedProduct = await Users.updateOne(
+      { _id: user._id },
+      { $push: { products: { productId: req.id, ...product } } }
+    );
   return res.status(201).send({
     message: "Product was successfully created",
-    data: product,
+    data: addedProduct,
   });
 };
 

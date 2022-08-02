@@ -12,14 +12,14 @@ import {
   validateProduct,
   checkForProductName,
 } from "../middleware/products.js";
-import { getUser } from "../controllers/users.js";
+
 
 const router = Router();
 
 router.get("all/products", getAllProducts);
 router.get("/product/:id", checkForProduct, getSingleProduct);
 router.get("/product/:name", checkForProductName, getProductByName);
-router.post("/products", validateProduct, addProduct);
+router.post("/:userID/products", validateProduct, addProduct);
 router.put("/product/:id", checkForProduct, updateProduct);
 router.delete("/product/:id", checkForProduct, deleteProduct);
 

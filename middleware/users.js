@@ -42,7 +42,7 @@ export const validateUserSignin = async (req, res, next) => {
 };
 
 export const checkForUser = async (req, res, next) => {
-  const user = await Users.find({name:req.params.userId});
+  const user = await Users.findById(req.params.userId);
   if (!user) {
     return res.status(404).send({
       message: "User not found",
