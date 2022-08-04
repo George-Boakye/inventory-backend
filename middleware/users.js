@@ -1,5 +1,6 @@
 import { userSignUpSchema, userSignInSchema } from "./validation.js";
 import Users from "../models/Users.js";
+import { comparePassword } from "../services/auth.js";
 
 export const validateUser = async (req, res, next) => {
   const { error } = userSignUpSchema.validate(req.body);
@@ -20,21 +21,15 @@ export const validateUser = async (req, res, next) => {
 export const validateUserSignin = async (req, res, next) => {
   const { error } = userSignInSchema.validate(req.body);
   const user = await Users.findOne({email: req.body.email});
+  const valid =  await comparePassword(req.body.password, user.password);
   if (error) {
     return res.status(400).send({
       error,
     });
   }
-  if (user) {
-    if (user.password !== req.body.password) {
-      return res.status(400).send({
-        message: "Incorrect Password",
-      });
-    }
-  }
-  if (!user) {
+  if (!valid) {
     return res.status(404).send({
-      message: "User not found",
+      message: "Incorrect email & password cobination",
     });
   }
   req.user = user;

@@ -1,12 +1,15 @@
 import Users from "../models/Users.js";
+import { generatePassword } from "../services/auth.js";
 
 export const addUser = async (req, res) => {
   const { fullName, email,shopName, password } = req.body;
+  const {salt, hash} = await generatePassword(password);
   const user  = await Users.create({
     fullName,
     email,
     shopName,
-    password,
+    salt,
+    password: hash,
     products: [],
   });
   return res.status(201).send({
@@ -16,10 +19,11 @@ export const addUser = async (req, res) => {
 };
 
 
-export const getUser = (req, res,) => {
+export const getUser = async (req, res,) => {
+  const user = await Users.findById(req.user._id).populate({path:'products', populate:{path:'productId'}})
   res.status(200).send({
     message: "User found successfully",
-    data: req.user,
+    data: user,
   });
 
 };

@@ -11,6 +11,7 @@ const productSchema = new Schema(
     price: { type: String, required:true },
     status: { type: String, required: true },
     category: { type: String, required: true },
+    user:{type:mongoose.Types.ObjectId, ref:'Users'}
   },
   { timestamps: true }
 );

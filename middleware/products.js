@@ -6,14 +6,13 @@ export const getUserDetails = async () => {};
 
 export const checkForProduct = async (req, res, next) => {
 	const product = await Products.findById({ _id: req.params.id });
-
 	if (!product) {
 		return res.status(404).send({
 			message: 'Product not found',
 			data: null,
 		});
 	}
-	// req.product = product
+	req.product = product
 	next();
 };
 
