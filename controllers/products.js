@@ -41,7 +41,7 @@ export const addProduct = async (req, res) => {
       res,
       201,
       "Product was successfully created",
-      addProduct
+      addedProduct
     );
   } catch (error) {
     return responseHandler(res, 400, "Product creation failed",error);
