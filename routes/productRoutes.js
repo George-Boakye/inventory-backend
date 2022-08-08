@@ -12,8 +12,13 @@ import {
 	validateProduct,
 	checkForProductName,
 } from '../middleware/products.js';
+import { auth } from '../middleware/users.js';
+
+
 
 const router = Router();
+
+router.use(auth)
 
 router.get('/all/products', getAllProducts);
 router.get('/product/:id', checkForProduct, getSingleProduct);

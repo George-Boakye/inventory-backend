@@ -1,6 +1,8 @@
 import { userSignUpSchema, userSignInSchema } from "./validation.js";
 import Users from "../models/Users.js";
 import { comparePassword } from "../services/auth.js";
+import  Jwt  from "jsonwebtoken";
+import "dotenv/config";
 
 export const validateUser = async (req, res, next) => {
   const { error } = userSignUpSchema.validate(req.body);
@@ -57,3 +59,31 @@ export const validateCompany = (req, res, next) => {
   }
   next();
 };
+export const auth  =  (req, res, next) => {
+const {token} = req.headers
+console.log(token)
+const decoded = Jwt.verify(token,process.env.SECRET_KEY );
+console.log(decoded)
+if(!token){
+  return res.status(400).send({
+    message: "Access denied. No token was provided",
+    data:null
+  })
+}
+try {
+  if(!decoded){
+    return res.status(403).send({
+      message:"You do not have the right access to this resource",
+      data: null
+    })
+  }
+  req.user = decoded
+  next()
+} catch (error) {
+  console.log(error)
+  return res.status(403).send({
+    message:"You do not have the right access to this resource",
+    data: null
+  })
+}
+}
